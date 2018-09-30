@@ -12,10 +12,9 @@
     "url": "git+https://github.com/ufologist/wechatdevtools-cli.git"
   },
   "keywords": [
-    "copy",
-    "git",
-    "commit",
-    "push"
+    "weapp",
+    "upload",
+    "wechatdevtools"
   ],
   "author": "Sun",
   "license": "MIT",
