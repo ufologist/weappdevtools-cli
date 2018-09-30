@@ -14,6 +14,8 @@
 ## Why
 
 通过工具规范化微信小程序上传代码时需要人为填写的 **版本号** 和 **备注**
+![upload-example](https://raw.githubusercontent.com/ufologist/weappdevtools-cli/master/upload-example.png)
+
 * 生成的 **版本号** 规则
   * 尝试读取微信小程序项目根目录下的 `package.json` 文件中的版本号
   * 尝试读取微信小程序项目 GIT 最后提交的日志的 hash 值
