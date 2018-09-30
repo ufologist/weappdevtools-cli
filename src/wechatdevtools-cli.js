@@ -110,14 +110,15 @@ class WechatdevtoolsCli {
      */
     upload(projectRoot, version, desc) {
         var uploadInfoOuput = path.resolve(process.cwd(), 'upload-info.json');
-        var args = `-u ${version}@${path.resolve(projectRoot)} --upload-desc "${desc}" --upload-info-output "${uploadInfoOuput}"`;
+        var _projectRoot = path.resolve(projectRoot);
+        var args = `-u ${version}@${_projectRoot} --upload-desc "${desc}" --upload-info-output "${uploadInfoOuput}"`;
 
         return this.execute(args).then(function() {
             console.log(consoleSeparator);
             var table = new Table({
                 head: ['项目', '版本号', '项目备注']
             });
-            table.push([projectRoot, version, desc]);
+            table.push([_projectRoot, version, desc]);
             console.log(table.toString());
 
             var uploadInfo = {};
