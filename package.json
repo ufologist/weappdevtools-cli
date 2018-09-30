@@ -1,0 +1,33 @@
+{
+  "name": "weappdevtools-cli",
+  "version": "1.0.0",
+  "description": "微信小程序开发者工具命令行小秘书",
+  "main": "src/wechatdevtools-cli.js",
+  "bin": "./bin/cli.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ufologist/wechatdevtools-cli.git"
+  },
+  "keywords": [
+    "copy",
+    "git",
+    "commit",
+    "push"
+  ],
+  "author": "Sun",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ufologist/wechatdevtools-cli/issues"
+  },
+  "homepage": "https://github.com/ufologist/wechatdevtools-cli#readme",
+  "dependencies": {
+    "cli-table3": "^0.5.1",
+    "ora": "^3.0.0",
+    "process-list": "^1.2.3",
+    "simple-git": "^1.103.0",
+    "yargs": "^12.0.2"
+  }
+}
