@@ -9,6 +9,10 @@ const {
     executeCmd
 } = require('./util.js');
 
+// 微信开发者工具默认安装目录
+const DEFAULT_WECHATDEVTOOLS_INSTALL_PATH_WINDOWS = 'D:/Program Files (x86)/Tencent/微信web开发者工具';
+const DEFAULT_WECHATDEVTOOLS_INSTALL_PATH_MacOs = '/Applications/wechatwebdevtools.app';
+
 class WechatdevtoolsCli {
     /**
      * 微信开发者工具命令行
@@ -29,8 +33,7 @@ class WechatdevtoolsCli {
      */
     tryFindCliPathFromCurrentProcessList() {
         return findProcessPathFromCurrentProcessList(this.processName).then((processPath) => {
-            this.cliPath = path.resolve(path.dirname(processPath), this.cliBin);
-            return this.cliPath;
+            return path.resolve(path.dirname(processPath), this.cliBin);
         });
     }
 
@@ -43,6 +46,27 @@ class WechatdevtoolsCli {
      */
     execute(args) {
         if (this.cliPath) {
+            this._executeCli(args);
+        } else {
+            return this.tryFindCliPathFromCurrentProcessList().then((cliPath) => {
+                if (cliPath) {
+                    this.cliPath = cliPath;
+                } else {
+                    console.log('Not find cliPath from process list, try use default cliPath');
+                    this.cliPath = this._getDefaultCliPath();
+                }
+
+                this._executeCli();
+            }, (error) => {
+                console.log('Find cliPath from process list fail, try use default cliPath', error);
+                this.cliPath = this._getDefaultCliPath();
+                this._executeCli();
+            });
+        }
+    }
+
+    _executeCli(args) {
+        if (this.cliPath) {
             console.log(consoleSeparator);
             console.log(`Use wechatdevtools cli: ${this.cliPath}`);
             console.log(consoleSeparator);
@@ -53,26 +77,18 @@ class WechatdevtoolsCli {
                 return stout;
             });
         } else {
-            return this.tryFindCliPathFromCurrentProcessList().then(() => {
-                if (this.cliPath) {
-                    console.log(consoleSeparator);
-                    console.log(`Use wechatdevtools cli: ${this.cliPath}`);
-                    console.log(consoleSeparator);
-
-                    return executeCmd(`${path.basename(this.cliPath)} ${args}`, {
-                        cwd: path.dirname(this.cliPath)
-                    }).then(function(stout) {
-                        return stout;
-                    });
-                } else {
-                    console.error('Required a wechatdevtools cli path');
-                    process.exit(1);
-                }
-            }, function() {
-                console.error('Required a wechatdevtools cli path');
-                process.exit(1);
-            });
+            return Promise.reject('none cliPath');
         }
+    }
+
+    _getDefaultCliPath() {
+        var cliPath = '';
+        if (process.platform === 'win32') {
+            cliPath = path.resolve(DEFAULT_WECHATDEVTOOLS_INSTALL_PATH_WINDOWS, this.cliBin);
+        } else {
+            cliPath = path.resolve(DEFAULT_WECHATDEVTOOLS_INSTALL_PATH_MacOs, 'Contents/MacOS', this.cliBin);
+        }
+        return cliPath;
     }
 
     /**
@@ -88,7 +104,7 @@ class WechatdevtoolsCli {
         return this.execute(args).then(function() {
             var previewInfo = {};
             try {
-                var previewInfo = JSON.parse(fs.readFileSync(previewInfoOutput));
+                previewInfo = JSON.parse(fs.readFileSync(previewInfoOutput));
                 console.log(consoleSeparator);
                 console.log(`本次预览的额外信息: ${JSON.stringify(previewInfo)}`);
 
@@ -109,9 +125,9 @@ class WechatdevtoolsCli {
      * @return {Promise} 上传的额外信息
      */
     upload(projectRoot, version, desc) {
-        var uploadInfoOuput = path.resolve(process.cwd(), 'upload-info.json');
+        var uploadInfoOutput = path.resolve(process.cwd(), 'upload-info.json');
         var _projectRoot = path.resolve(projectRoot);
-        var args = `-u ${version}@${_projectRoot} --upload-desc "${desc}" --upload-info-output "${uploadInfoOuput}"`;
+        var args = `-u ${version}@${_projectRoot} --upload-desc "${desc}" --upload-info-output "${uploadInfoOutput}"`;
 
         return this.execute(args).then(function() {
             console.log(consoleSeparator);
@@ -123,11 +139,11 @@ class WechatdevtoolsCli {
 
             var uploadInfo = {};
             try {
-                var uploadInfo = JSON.parse(fs.readFileSync(uploadInfoOuput));
+                uploadInfo = JSON.parse(fs.readFileSync(uploadInfoOutput));
                 console.log(consoleSeparator);
                 console.log(`本次上传的额外信息: ${JSON.stringify(uploadInfo)}`);
 
-                fs.unlink(uploadInfoOuput, function() {});
+                fs.unlink(uploadInfoOutput, function() {});
             } catch (error) {
                 console.error('Read upload info fail :(', error);
             }

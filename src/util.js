@@ -19,24 +19,28 @@ const consoleSeparator = '--------------------------';
 function findProcessPathFromCurrentProcessList(processName) {
     var spinner = ora(`Find ${processName} process from the current process list`).start();
 
-    return snapshot('pid', 'name', 'path').then(tasks => {
-        var processPath;
+    if (snapshot) {
+        return snapshot('pid', 'name', 'path').then(tasks => {
+            var processPath;
 
-        var task = tasks.find(function(task) {
-            return task.name.indexOf(processName) !== -1;
+            var task = tasks.find(function(task) {
+                return task.name.indexOf(processName) !== -1;
+            });
+
+            if (task) {
+                spinner.succeed(`Find ${processName} process: ${JSON.stringify(task)}`);
+                processPath = task.path;
+            } else {
+                spinner.fail(`Not find ${processName} process`);
+            }
+
+            return processPath;
+        }, function(error) {
+            spinner.fail(`Find ${processName} process fail: ${error}`);
         });
-
-        if (task) {
-            spinner.succeed(`Find ${processName} process: ${JSON.stringify(task)}`);
-            processPath = task.path;
-        } else {
-            spinner.fail(`Not find ${processName} process`);
-        }
-
-        return processPath;
-    }, function(error) {
-        spinner.fail(`Find ${processName} process fail: ${error}`);
-    });
+    } else {
+        return Promise.reject('Not find module process-list');
+    }
 }
 
 /**
