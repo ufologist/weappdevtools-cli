@@ -113,8 +113,6 @@ class WechatdevtoolsCli {
                     console.log(`本次预览的额外信息: ${JSON.stringify(previewInfo)}`);
 
                     fs.unlink(previewInfoOutput, function() {});
-                } else {
-                    process.exit(1);
                 }
             } catch (error) {
                 console.error('Read preview info fail :(', error);
@@ -152,8 +150,6 @@ class WechatdevtoolsCli {
                     console.log(`本次上传的额外信息: ${JSON.stringify(uploadInfo)}`);
 
                     fs.unlink(uploadInfoOutput, function() {});
-                } else {
-                    process.exit(1);
                 }
             } catch (error) {
                 console.error('Read upload info fail :(', error);
