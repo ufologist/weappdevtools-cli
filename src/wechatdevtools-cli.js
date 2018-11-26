@@ -46,7 +46,7 @@ class WechatdevtoolsCli {
      */
     execute(args) {
         if (this.cliPath) {
-            this._executeCli(args);
+            return this._executeCli(args);
         } else {
             return this.tryFindCliPathFromCurrentProcessList().then((cliPath) => {
                 if (cliPath) {
@@ -56,12 +56,13 @@ class WechatdevtoolsCli {
                     this.cliPath = this._getDefaultCliPath();
                 }
 
-                this._executeCli(args);
+                return this._executeCli(args);
             }, (error) => {
                 console.log('Find cliPath from process list fail', error);
                 console.log('try use default cliPath');
                 this.cliPath = this._getDefaultCliPath();
-                this._executeCli(args);
+
+                return this._executeCli(args);
             });
         }
     }
