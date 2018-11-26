@@ -56,11 +56,12 @@ class WechatdevtoolsCli {
                     this.cliPath = this._getDefaultCliPath();
                 }
 
-                this._executeCli();
+                this._executeCli(args);
             }, (error) => {
-                console.log('Find cliPath from process list fail, try use default cliPath', error);
+                console.log('Find cliPath from process list fail', error);
+                console.log('try use default cliPath');
                 this.cliPath = this._getDefaultCliPath();
-                this._executeCli();
+                this._executeCli(args);
             });
         }
     }
@@ -75,6 +76,8 @@ class WechatdevtoolsCli {
                 cwd: path.dirname(this.cliPath)
             }).then(function(stout) {
                 return stout;
+            }, function(stderr) {
+                return stderr;
             });
         } else {
             return Promise.reject('none cliPath');
@@ -104,11 +107,15 @@ class WechatdevtoolsCli {
         return this.execute(args).then(function() {
             var previewInfo = {};
             try {
-                previewInfo = JSON.parse(fs.readFileSync(previewInfoOutput));
-                console.log(consoleSeparator);
-                console.log(`本次预览的额外信息: ${JSON.stringify(previewInfo)}`);
+                if (fs.existsSync(previewInfoOutput)) {
+                    previewInfo = JSON.parse(fs.readFileSync(previewInfoOutput));
+                    console.log(consoleSeparator);
+                    console.log(`本次预览的额外信息: ${JSON.stringify(previewInfo)}`);
 
-                fs.unlink(previewInfoOutput, function() {});
+                    fs.unlink(previewInfoOutput, function() {});
+                } else {
+                    process.exit(1);
+                }
             } catch (error) {
                 console.error('Read preview info fail :(', error);
             }
@@ -130,20 +137,24 @@ class WechatdevtoolsCli {
         var args = `-u ${version}@${_projectRoot} --upload-desc "${desc}" --upload-info-output "${uploadInfoOutput}"`;
 
         return this.execute(args).then(function() {
-            console.log(consoleSeparator);
-            var table = new Table({
-                head: ['项目', '版本号', '项目备注']
-            });
-            table.push([_projectRoot, version, desc]);
-            console.log(table.toString());
-
             var uploadInfo = {};
             try {
-                uploadInfo = JSON.parse(fs.readFileSync(uploadInfoOutput));
-                console.log(consoleSeparator);
-                console.log(`本次上传的额外信息: ${JSON.stringify(uploadInfo)}`);
+                if (fs.existsSync(uploadInfoOutput)) {
+                    console.log(consoleSeparator);
+                    var table = new Table({
+                        head: ['项目', '版本号', '项目备注']
+                    });
+                    table.push([_projectRoot, version, desc]);
+                    console.log(table.toString());
 
-                fs.unlink(uploadInfoOutput, function() {});
+                    uploadInfo = JSON.parse(fs.readFileSync(uploadInfoOutput));
+                    console.log(consoleSeparator);
+                    console.log(`本次上传的额外信息: ${JSON.stringify(uploadInfo)}`);
+
+                    fs.unlink(uploadInfoOutput, function() {});
+                } else {
+                    process.exit(1);
+                }
             } catch (error) {
                 console.error('Read upload info fail :(', error);
             }
