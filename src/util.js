@@ -2,9 +2,14 @@ const {
     exec
 } = require('child_process');
 
-const {
-    snapshot
-} = require('process-list');
+// Mac 下无法使用 `process-list` 模块
+var snapshot = null;
+try {
+    const processList = require('process-list');
+    snapshot = processList.snapshot;
+} catch (error) {
+    console.error('Cannot find module', error);
+}
 const simpleGit = require('simple-git/promise');
 const ora = require('ora');
 
