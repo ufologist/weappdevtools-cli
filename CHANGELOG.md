@@ -1,5 +1,11 @@
 # CHANGELOG
 
+* v1.0.4 2018-11-30
+
+  * 解决 Mac 与 Windows 平台可执行文件执行方式不一样的问题
+
+    > 现在统一处理为: `"./${path.basename(this.cliPath)}" ${args}`
+
 * v1.0.3 2018-11-30
 
   * Mac 下无法使用 `process-list` 模块, 加载模块时需要做异常处理
