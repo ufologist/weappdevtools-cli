@@ -73,7 +73,7 @@ class WechatdevtoolsCli {
             console.log(`Use wechatdevtools cli: ${this.cliPath}`);
             console.log(consoleSeparator);
 
-            return executeCmd(`${path.basename(this.cliPath)} ${args}`, {
+            return executeCmd(`"./${path.basename(this.cliPath)}" ${args}`, {
                 cwd: path.dirname(this.cliPath)
             }).then(function(stout) {
                 return stout;

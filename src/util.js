@@ -22,28 +22,29 @@ const consoleSeparator = '--------------------------';
  * @return {Promise<string>} 进程的路径
  */
 function findProcessPathFromCurrentProcessList(processName) {
-    var spinner = ora(`Find ${processName} process from the current process list`).start();
+    var spinner = ora(`Find "${processName}" process from the current process list`).start();
 
     if (snapshot) {
         return snapshot('pid', 'name', 'path').then(tasks => {
             var processPath;
 
-            var task = tasks.find(function(task) {
+            var foundTask = tasks.find(function(task) {
                 return task.name.indexOf(processName) !== -1;
             });
 
-            if (task) {
-                spinner.succeed(`Find ${processName} process: ${JSON.stringify(task)}`);
-                processPath = task.path;
+            if (foundTask) {
+                spinner.succeed(`Find "${processName}" process: ${JSON.stringify(foundTask)}`);
+                processPath = foundTask.path;
             } else {
-                spinner.fail(`Not find ${processName} process`);
+                spinner.fail(`Not find "${processName}" process`);
             }
 
             return processPath;
         }, function(error) {
-            spinner.fail(`Find ${processName} process fail: ${error}`);
+            spinner.fail(`Find "${processName}" process fail: ${error}`);
         });
     } else {
+        spinner.fail(`Find "${processName}" process fail: Not find module process-list`);
         return Promise.reject('Not find module process-list');
     }
 }
