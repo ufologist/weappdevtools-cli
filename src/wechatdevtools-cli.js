@@ -141,9 +141,9 @@ class WechatdevtoolsCli {
                 if (fs.existsSync(uploadInfoOutput)) {
                     console.log(consoleSeparator);
                     var table = new Table({
-                        head: ['项目', '版本号', '项目备注']
+                        head: ['时间', '项目', '版本号', '项目备注']
                     });
-                    table.push([_projectRoot, version, desc]);
+                    table.push([new Date().toLocaleString(), _projectRoot, version, desc]);
                     console.log(table.toString());
 
                     uploadInfo = JSON.parse(fs.readFileSync(uploadInfoOutput));
