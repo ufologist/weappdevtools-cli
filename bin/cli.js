@@ -53,7 +53,7 @@ yargs.usage(`微信小程序开发者工具命令行小秘书@${pkg.version}`)
          getLastCommitLog(argv.projectRoot).then(function(latest) {
              // 本来是想用 1.0.0+commit.xxxxxxx
              // 但微信小程序的版本号只允许字母和数字
-             version = `${version}.${latest.hash.substring(0, 7)}`;
+             version = `${version}.${latest.hash.substring(0, 7)}.${argv.env}`;
 
              new WechatdevtoolsCli(argv.cliPath).upload(argv.projectRoot, version, desc);
          }, function() {
