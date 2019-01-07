@@ -39,7 +39,7 @@ npm install weappdevtools-cli -g
 
 ```
 cd /path/to/weapp-project-root-dir
-weappdevtools-cli upload --projectRoot=. --env=test
+weappdevtools-cli upload --env=test
 ```
 
 or
