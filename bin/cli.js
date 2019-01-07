@@ -13,12 +13,14 @@ var pkg = require('../package.json');
 yargs.usage(`微信小程序开发者工具命令行小秘书@${pkg.version}`)
      .version(false)
      .option('projectRoot', {
-         describe: '微信小程序项目的根目录'
+         default: '.',
+         describe: '微信小程序项目的根目录, 默认为当前目录'
      })
      .option('cliPath', {
          describe: '微信小程序开发者工具 CLI 的路径, 默认从当前进程中查找',
      })
      .command('preview', '提交预览', function() {}, function(argv) {
+         console.log(JSON.stringify(argv, null, 4));
          new WechatdevtoolsCli(argv.cliPath).preview(argv.projectRoot);
      })
      .command('upload [env] [version] [desc]', '上传代码', function(yargs) {
@@ -36,6 +38,8 @@ yargs.usage(`微信小程序开发者工具命令行小秘书@${pkg.version}`)
              describe: '项目备注'
          });
      }, function(argv) {
+         console.log(JSON.stringify(argv, null, 4));
+
          var version = argv.version;
 
          if (!version) {
@@ -60,6 +64,5 @@ yargs.usage(`微信小程序开发者工具命令行小秘书@${pkg.version}`)
              new WechatdevtoolsCli(argv.cliPath).upload(argv.projectRoot, version, desc);
          });
      })
-     .demandOption(['projectRoot'])
      .help()
      .argv;
