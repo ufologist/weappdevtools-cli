@@ -40,9 +40,17 @@ class WechatdevtoolsCli {
     /**
      * 执行"微信Web开发者工具"的命令行工具
      * 
+     * 也可以通过 HTTP 请求指示工具进行操作, 实现思路: http 服务在工具启动后自动开启，HTTP 服务端口号在用户目录下记录，可通过检查用户目录、检查用户目录下是否有端口文件及尝试连接来判断工具是否安装/启动。端口号文件位置：
+     * - macOS : ~/Library/Application Support/微信web开发者工具/Default/.ide
+     * - Windows : ~/AppData/Local/微信web开发者工具/User Data/Default/.ide
+     * - require('os').homedir()
+     * - https://github.com/pandolajs/pandora-boilerplate-wechat/blob/master/.pandora/scripts/utils/index.js
+     * - https://github.com/pandolajs/pandora-boilerplate-wechat/blob/master/.pandora/scripts/release.js
+     * 
      * @param {string} args 命令参数
      * @return {Promise}
      * @see https://developers.weixin.qq.com/miniprogram/dev/devtools/cli.html
+     * @see https://developers.weixin.qq.com/miniprogram/dev/devtools/http.html
      */
     execute(args) {
         if (this.cliPath) {
