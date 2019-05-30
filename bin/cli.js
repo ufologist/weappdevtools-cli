@@ -40,7 +40,7 @@ yargs.usage(`微信小程序开发者工具命令行小秘书@${pkg.version}`)
      }, function(argv) {
          console.log(JSON.stringify(argv, null, 4));
 
-         var version = argv.version;
+         var version = argv.version || process.env.npm_package_version;
 
          if (!version) {
             try {
