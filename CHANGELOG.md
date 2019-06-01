@@ -2,7 +2,7 @@
 
 * v1.1.0 2019-6-1
 
-  * 设置 `desc` 命令行参数默认读取微信小程序项目的 latest commit message
+  * [#1](https://github.com/ufologist/weappdevtools-cli/issues/1) 设置 `desc` 命令行参数默认读取微信小程序项目的 latest commit message
 
 * v1.0.7 2019-1-7
 
