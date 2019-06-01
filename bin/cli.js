@@ -31,11 +31,11 @@ yargs.usage(`微信小程序开发者工具命令行小秘书@${pkg.version}`)
          }).positional('version', {
              type: 'string',
              default: '',
-             describe: '版本号, 默认读取微信小程序项目 package.json 中的版本号'
+             describe: '版本号, 默认读取微信小程序项目 package.json 中的版本号 + latest commit hash'
          }).positional('desc', {
              type: 'string',
              default: '',
-             describe: '项目备注'
+             describe: '项目备注, 默认读取微信小程序项目的 latest commit message'
          });
      }, function(argv) {
          console.log(JSON.stringify(argv, null, 4));
@@ -52,17 +52,32 @@ yargs.usage(`微信小程序开发者工具命令行小秘书@${pkg.version}`)
             }
          }
 
-         var env = argv.env ? `env: ${argv.env} ` : '';
+         var desc = '';
+         var envDesc = argv.env ? `env: ${argv.env}` : '';
 
          getLastCommitLog(argv.projectRoot).then(function(latest) {
+             // 版本号补充 commit hash
              // 本来是想用 1.0.0+commit.xxxxxxx
              // 但微信小程序的版本号只允许字母和数字
-             version = `${version}.${latest.hash.substring(0, 7)}.${argv.env}`;
+             version = `${version}.${latest.hash.substring(0, 7)}`;
+             // 版本号补充环境信息
+             if (argv.env) {
+                 version = `${version}.${argv.env}`;
+             }
 
-             var desc = env + (argv.desc || (latest.message + latest.body));
+             // 说明信息补充提交日志
+             desc = `${envDesc} ${argv.desc || latest.message.substring(0, 80)}`;
+
              new WechatdevtoolsCli(argv.cliPath).upload(argv.projectRoot, version, desc);
          }, function() {
-             new WechatdevtoolsCli(argv.cliPath).upload(argv.projectRoot, version, env + argv.desc);
+             // 版本号补充环境信息
+             if (argv.env) {
+                 version = `${version}.${argv.env}`;
+             }
+             // 说明信息补充提交日志
+             desc = `${envDesc} ${argv.desc}`;
+
+             new WechatdevtoolsCli(argv.cliPath).upload(argv.projectRoot, version, desc);
          });
      })
      .help()
