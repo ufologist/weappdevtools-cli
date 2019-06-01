@@ -40,7 +40,7 @@ yargs.usage(`微信小程序开发者工具命令行小秘书@${pkg.version}`)
      }, function(argv) {
          console.log(JSON.stringify(argv, null, 4));
 
-         var version = argv.version;
+         var version = argv.version || process.env.npm_package_version;
 
          if (!version) {
             try {
@@ -52,16 +52,17 @@ yargs.usage(`微信小程序开发者工具命令行小秘书@${pkg.version}`)
             }
          }
 
-         var desc = `env: ${argv.env} ${argv.desc}`;
+         var env = argv.env ? `env: ${argv.env} ` : '';
 
          getLastCommitLog(argv.projectRoot).then(function(latest) {
              // 本来是想用 1.0.0+commit.xxxxxxx
              // 但微信小程序的版本号只允许字母和数字
              version = `${version}.${latest.hash.substring(0, 7)}.${argv.env}`;
 
+             var desc = env + (argv.desc || (latest.message + latest.body));
              new WechatdevtoolsCli(argv.cliPath).upload(argv.projectRoot, version, desc);
          }, function() {
-             new WechatdevtoolsCli(argv.cliPath).upload(argv.projectRoot, version, desc);
+             new WechatdevtoolsCli(argv.cliPath).upload(argv.projectRoot, version, env + argv.desc);
          });
      })
      .help()
