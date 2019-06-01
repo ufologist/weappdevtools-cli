@@ -107,6 +107,7 @@ preview success
 
 ## Notice
 
+* 需要将开发者工具的`设置-安全设置-服务端口`打开
 * 需要将目标项目从"微信web开发者工具"中删除掉一次(执行命令后会自动再加上该项目)
 * 如果你的项目的开发模式非微信小程序原生的开发模式, 例如使用了 [min](https://github.com/meili/min-cli) 或者其他(wepy/mpvue/taro/...)
   * 需要给 `project.config.json` 添加 [`miniprogramRoot`](https://developers.weixin.qq.com/miniprogram/dev/devtools/projectconfig.html) 参数
