@@ -1,5 +1,9 @@
 # CHANGELOG
 
+* v1.1.0 2019-6-1
+
+  * 设置 `desc` 命令行参数默认读取微信小程序项目的 latest commit message
+
 * v1.0.7 2019-1-7
 
   * 设置 `projectRoot` 命令行参数默认为当前目录
