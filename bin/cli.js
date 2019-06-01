@@ -66,7 +66,7 @@ yargs.usage(`微信小程序开发者工具命令行小秘书@${pkg.version}`)
              }
 
              // 说明信息补充提交日志
-             desc = `${envDesc} ${argv.desc || latest.message.substring(0, 80)}`;
+             desc = `${envDesc} ${argv.desc || latest.message}`;
 
              new WechatdevtoolsCli(argv.cliPath).upload(argv.projectRoot, version, desc);
          }, function() {

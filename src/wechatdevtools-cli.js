@@ -141,7 +141,12 @@ class WechatdevtoolsCli {
     upload(projectRoot, version, desc) {
         var uploadInfoOutput = path.resolve(process.cwd(), 'upload-info.json');
         var _projectRoot = path.resolve(projectRoot);
-        var args = `-u ${version}@${_projectRoot} --upload-desc "${desc}" --upload-info-output "${uploadInfoOutput}"`;
+        // 开发者工具上项目备注是限制了只能输入 100 个字符
+        // 为了避免上传失败, 保持这个限制
+        var _desc = desc ? desc : '';
+        _desc = _desc.substring(0, 100);
+
+        var args = `-u ${version}@${_projectRoot} --upload-desc "${_desc}" --upload-info-output "${uploadInfoOutput}"`;
 
         return this.execute(args).then(function() {
             var uploadInfo = {};
@@ -151,7 +156,7 @@ class WechatdevtoolsCli {
                     var table = new Table({
                         head: ['时间', '项目', '版本号', '项目备注']
                     });
-                    table.push([new Date().toLocaleString(), _projectRoot, version, desc]);
+                    table.push([new Date().toLocaleString(), _projectRoot, version, _desc]);
                     console.log(table.toString());
 
                     uploadInfo = JSON.parse(fs.readFileSync(uploadInfoOutput));
