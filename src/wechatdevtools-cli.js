@@ -144,7 +144,12 @@ class WechatdevtoolsCli {
         // 开发者工具上项目备注是限制了只能输入 100 个字符
         // 为了避免上传失败, 保持这个限制
         var _desc = desc ? desc : '';
-        _desc = _desc.substring(0, 100);
+        if (_desc.length > 100) {
+            console.log(consoleSeparator);
+            console.warn('desc 超过了 100 个字符, 会截取前 100 个字符');
+            console.log(consoleSeparator);
+            _desc = _desc.substring(0, 100);
+        }
 
         var args = `-u ${version}@${_projectRoot} --upload-desc "${_desc}" --upload-info-output "${uploadInfoOutput}"`;
 
