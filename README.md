@@ -24,7 +24,8 @@
 * 生成的 **备注** 规则
   * 读取命令行中传入的环境参数: `--env`
   * 读取命令行中传入的备注参数: `--desc`
-  * 组合: `env: ${env} ${desc}`
+  * 尝试读取微信小程序项目 GIT 最后提交的日志的 message
+  * 组合: `env: ${env} ${desc || message}`
   * 例如: `env: test 补充信息`
 
 ## Installation
