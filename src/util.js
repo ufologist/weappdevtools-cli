@@ -10,7 +10,7 @@ try {
 } catch (error) {
     console.error('Cannot find module', error);
 }
-const simpleGit = require('simple-git/promise');
+const simpleGit = require('simple-git');
 const ora = require('ora');
 
 const consoleSeparator = '--------------------------';
@@ -88,14 +88,19 @@ function executeCmd(command, options) {
 function getLastCommitLog(gitProject) {
     var spinner = ora(`Get last commit log: ${gitProject}`).start();
 
-    var git = simpleGit(gitProject);
-    return git.log({
-        n: 1
-    }).then(function(listLogSummary) {
-        spinner.succeed(`Get last commit log: ${JSON.stringify(listLogSummary.latest)}`);
-        return listLogSummary.latest;
-    }, function(error) {
-        spinner.fail(`Get last commit log fail: ${error}`);
+    return new Promise(function(resolve, reject) {
+        var git = simpleGit(gitProject);
+        git.log({
+            n: 1
+        }, function(error, listLogSummary) {
+            if (!error) {
+                spinner.succeed(`Get last commit log: ${JSON.stringify(listLogSummary.latest)}`);
+                resolve(listLogSummary.latest);
+            } else {
+                spinner.fail(`Get last commit log fail: ${error}`);
+                reject(error);
+            }
+        });
     });
 }
 
