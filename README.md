@@ -9,6 +9,8 @@
 [changelog-image]: https://img.shields.io/badge/CHANGE-LOG-blue.svg?style=flat-square
 [changelog-url]: https://github.com/ufologist/weappdevtools-cli/blob/master/CHANGELOG.md
 
+> 微信小程序官方已经推出了 [miniprogram-ci](https://developers.weixin.qq.com/miniprogram/dev/devtools/ci.html "开发者可不打开小程序开发者工具，独立使用 miniprogram-ci 进行小程序代码的上传、预览等操作"), 推荐大家使用, `weappdevtools-cli` 可以光荣的退休了
+
 微信小程序开发者工具命令行小秘书
 
 ## Why
